@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import QUESTIONS from '../utils/questions';
 import Summary from './Summary';
-import QuestionTimer from './QuestionTimer';
+import Question from './Question';
 
-interface Answer {
+export interface Answer {
   answer: 'answered' | 'unanswered' | 'correct' | 'wrong';
 }
 
@@ -50,47 +50,17 @@ function Quiz() {
     return <Summary />;
   }
 
-  const shuffledAnswers: string[] = [...QUESTIONS[activeQuestionIndex].answers];
-  shuffledAnswers.sort(() => Math.random() - 0.5);
-
   return (
     <div id='quiz'>
-      <div id='question'>
-        <QuestionTimer
-          key={activeQuestionIndex}
-          timeout={10000}
-          onTimeout={handleSkipAnswer}
-        />
-        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-        <ul id='answers'>
-          {shuffledAnswers.map((answer) => {
-            const isSelected = userAnswers[userAnswers.length - 1] === answer;
-            let answerClass = ``;
-
-            if (answerState.answer === 'answered' && isSelected) {
-              answerClass = `selected`;
-            }
-
-            if (
-              (answerState.answer === 'correct' ||
-                answerState.answer === 'wrong') &&
-              isSelected
-            ) {
-              answerClass = answerState.answer;
-            }
-            return (
-              <li key={answer} className='answer'>
-                <button
-                  onClick={() => handleSelectAnswer(answer)}
-                  className={answerClass}
-                >
-                  {answer}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <Question
+        key={activeQuestionIndex}
+        questionText={QUESTIONS[activeQuestionIndex].text}
+        answers={QUESTIONS[activeQuestionIndex].answers}
+        answerState={answerState}
+        selectedAnswer={userAnswers[userAnswers.length - 1]}
+        onSelectAnswer={handleSelectAnswer}
+        onSkipAnswer={handleSkipAnswer}
+      />
     </div>
   );
 }
