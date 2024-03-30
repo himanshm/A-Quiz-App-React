@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import QUESTIONS from '../utils/questions';
 import Summary from './Summary';
 import QuestionTimer from './QuestionTimer';
@@ -10,11 +10,16 @@ function Quiz() {
 
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
-  function handleSelectAnswer(selectedAnswer: string) {
+  const handleSelectAnswer = useCallback((selectedAnswer: string) => {
     setUserAnswers((prevAnswers) => {
       return [...prevAnswers, selectedAnswer];
     });
-  }
+  }, []);
+
+  // If the timer expired a question is skipped
+  const handleSkipAnswer = useCallback(() => {
+    handleSelectAnswer('');
+  }, [handleSelectAnswer]);
 
   if (quizIsComplete) {
     return <Summary />;
@@ -27,6 +32,7 @@ function Quiz() {
     <div id='quiz'>
       <div id='question'>
         <QuestionTimer
+          key={activeQuestionIndex}
           timeout={10000}
           onTimeout={() => handleSelectAnswer('')}
         />
@@ -34,9 +40,7 @@ function Quiz() {
         <ul id='answers'>
           {shuffledAnswers.map((answer) => (
             <li key={answer} className='answer'>
-              <button onClick={() => handleSelectAnswer(answer)}>
-                {answer}
-              </button>
+              <button onClick={handleSkipAnswer}>{answer}</button>
             </li>
           ))}
         </ul>
