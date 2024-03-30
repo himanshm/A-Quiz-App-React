@@ -90,12 +90,12 @@ header h1 {
   text-align: center;
 }
 
-#question-overview {
+#question {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 0.8rem;
   color: #9082a3;
   margin: 0;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 #question progress {
