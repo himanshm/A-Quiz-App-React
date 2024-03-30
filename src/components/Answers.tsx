@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Answer } from './Quiz';
+import { Answer } from './Question';
 
 type AnswersProps = {
   answers: string[];
@@ -39,7 +39,11 @@ function Answers({
         }
         return (
           <li key={answer} className='answer'>
-            <button onClick={() => onSelect(answer)} className={answerClass}>
+            <button
+              onClick={() => onSelect(answer)}
+              className={answerClass}
+              disabled={answerState.answer !== 'unanswered'}
+            >
               {answer}
             </button>
           </li>
